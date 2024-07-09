@@ -1,7 +1,7 @@
 name: Tests
 
 on:
-  workflow_call:
+  pull_request:
 
 jobs:
   tests:
@@ -9,6 +9,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Update packages
+        run: |
+          sudo apt-get update
+
+      - name: Install docker
+        run: |
+          sudo snap install docker
+
+      - name: Initialize LXD
+        run: |
+          sudo lxd init --auto
+
+          sudo iptables -P FORWARD ACCEPT
+          sudo sysctl net.ipv4.ip_forward=1
 
       - name: Install rockcraft
         run: |
@@ -20,8 +35,8 @@ jobs:
 
       - name: Install tox
         run: |
-          pip install tox
+          sudo apt-get install -y tox
 
       - name: Run Tox
         run: |
-          cd multus && tox
+          cd multus && sudo tox
