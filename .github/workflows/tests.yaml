@@ -1,0 +1,27 @@
+name: Tests
+
+on:
+  workflow_call:
+
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install rockcraft
+        run: |
+          sudo snap install rockcraft --classic
+
+      - name: Install yq
+        run: |
+          sudo snap install yq
+
+      - name: Install tox
+        run: |
+          pip install tox
+
+      - name: Run Tox
+        run: |
+          cd multus && tox
